@@ -39,6 +39,15 @@
 	ctx.lineTo(350,250);
 	ctx.stroke();
 
+	//ゲームの管理　盤面の行列・行列と座標を結びつける変数の宣言
+	/*let game = new Array();
+		array[0] = new Array(null,null,null);
+		array[0] = new Array(null,null,null);
+		array[0] = new Array(null,null,null);*/
+
+	let gamex;
+	let gamey;
+
 	function onClick(e) {
 	    let rect = e.target.getBoundingClientRect();
 	    x = e.clientX - rect.left;
@@ -48,23 +57,50 @@
 		switch (true) {
 			case 50<x && x<150:
 				x = 100;
+				gamex = 0;
 				break;
 
 			case 150<x && x<250:
 				x = 200;
+				gamex = 1
 				break;
 
 			case 250<x && x<350:
 				x = 300;
+				gamex = 2
 				break;
 			//枠、枠外クリックでターンをマイナスに
 			default:
 			turn = -turn;
 
 		}
+//yに対して同様に、枠外クリックではターンが正の場合のみ負に
+		switch (true) {
+			case 50<y && y<150:
+				y = 100;
+				gamey = 0
+				break;
 
-		//ターンが正なら偶奇によって丸を、負であればターンを進めずに正に戻す
-		if(x > 0){
+			case 150<y && y<250:
+				y = 200;
+				gamey = 1;
+				break;
+
+			case 250<y && y<350:
+				y = 300;
+				gamey = 2;
+				break;
+			//枠、枠外クリックでターンが正の場合マイナスに
+			default:
+			if(turn>0){
+			turn = -turn;
+			}
+		}
+
+		//ターンが正で偶奇によって丸を、負であればターンを進めずに正に戻す
+		if(turn>0){
+		//選択された座標がnullだった場合進行
+		//if(game[gamex][gamey] == null){
 		if(turn % 2 == 0){
 		//偶数なら白丸
 		ctx.beginPath();
@@ -76,9 +112,11 @@
 		ctx.arc(x, y, 40, 0, 2 * Math.PI, false);
 		ctx.fill();
 	}
-}else{
-	turn= -turn -1;
-}
+//	}
+
+	}else{
+		turn= -turn -1;
+	}
 
 		turn = turn + 1 ;
 	}
