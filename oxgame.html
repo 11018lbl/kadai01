@@ -39,16 +39,41 @@
 	ctx.lineTo(350,250);
 	ctx.stroke();
 
-	//ゲームの管理　盤面の行列・行列と座標を結びつける変数の宣言
-	/*let game = new Array();
-		array[0] = new Array(null,null,null);
-		array[0] = new Array(null,null,null);
-		array[0] = new Array(null,null,null);*/
+	//ゲームの管理　盤面の行列・行列と座標を結びつける変数・勝敗終了を管理する変数の宣言
+	let game = new Array();
+		game[0] = new Array(0,0,0);
+		game[1] = new Array(0,0,0);
+		game[2] = new Array(0,0,0);
 
 	let gamex;
 	let gamey;
 
+	let score;
+	let gameend = 0;
+
+	//ターンの宣言
+	let turn = 1;
+
+	//３なら黒を、-３なら白を勝者とする関数
+	let i;
+	function winner(i){
+		switch (i) {
+			case 3:
+				console.log("勝ち：黒");
+				gameend=1;
+				break;
+			case -3:
+				console.log("勝ち：白");
+				gameend=1;
+			default:
+				break;
+		}
+	}
+
 	function onClick(e) {
+	//ゲームが終了していない場合進行する
+	if(gameend==0){
+
 	    let rect = e.target.getBoundingClientRect();
 	    x = e.clientX - rect.left;
 	    y = e.clientY - rect.top;
@@ -99,30 +124,60 @@
 
 		//ターンが正で偶奇によって丸を、負であればターンを進めずに正に戻す
 		if(turn>0){
-		//選択された座標がnullだった場合進行
-		//if(game[gamex][gamey] == null){
+		//選択された座標が0だった場合ターンを戻して進行
+		if(game[gamex][gamey] == 0){
 		if(turn % 2 == 0){
-		//偶数なら白丸
+		//偶数なら白丸,該当マスを-1に
 		ctx.beginPath();
 		ctx.arc(x, y, 40, 0, 2 * Math.PI, false);
 		ctx.stroke();
+		game[gamex][gamey]=-1;
 	}else{
-		//奇数なら黒丸
+		//奇数なら黒丸,該当マスを1に
 		ctx.beginPath();
 		ctx.arc(x, y, 40, 0, 2 * Math.PI, false);
 		ctx.fill();
-	}
-//	}
+		game[gamex][gamey]=1;
+		}
+	}else{
+		turn = turn - 1;
+		}
 
 	}else{
 		turn= -turn -1;
 	}
 
-		turn = turn + 1 ;
+	//ターンが5以上の時勝敗を判定
+	if(turn >= 5){
+		//各列の合計値を勝利判定関数に入れる
+		//let l = 0
+		//for(let l = 0; l > 2; l++){
+			score = game[0][0]+game[0][1]+game[0][2];
+			winner(score);
+			score = game[1][0]+game[1][1]+game[1][2];
+			winner(score);
+			score = game[2][0]+game[2][1]+game[2][2];
+			winner(score);
+
+			score = game[0][0]+game[1][0]+game[2][0];
+			winner(score);
+			score = game[0][1]+game[1][1]+game[2][1];
+			winner(score);
+			score = game[0][2]+game[1][2]+game[2][2];
+			winner(score);
+		//}
+
+		score = game[0][0]+game[1][1]+game[2][2];
+		winner(score);
+		score = game[2][0]+game[1][1]+game[0][2];
+		winner(score);
+
 	}
 
-	//ターンの宣言
-	let turn = 1;
+		turn = turn + 1 ;
+	}
+	}
+
 	canvas.addEventListener('click', onClick, false);
 
 	</script>
