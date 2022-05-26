@@ -7,6 +7,7 @@
 
 <body>
 <h1>三目並べ</h1>
+<p><span id="winner_tag"></span></p>
 
 <!--描写エリアの設定-->
 <canvas id="canvas"></canvas>
@@ -56,14 +57,15 @@
 
 	//３なら黒を、-３なら白を勝者とする関数
 	let i;
+	let wint = document.getElementById("winner_tag");
 	function winner(i){
 		switch (i) {
 			case 3:
-				console.log("勝ち：黒");
+				wint.innerHTML="勝ち：黒";
 				gameend=1;
 				break;
 			case -3:
-				console.log("勝ち：白");
+				wint.innerHTML="勝ち：白";
 				gameend=1;
 			default:
 				break;
@@ -173,7 +175,11 @@
 		winner(score);
 
 	}
-
+		//ターンが9以上でgemeendが0のとき引き分けにして終了
+		if(turn>=9 && gameend == 0){
+			gameend = 1;
+			wint.innerHTML="引き分け";
+		}
 		turn = turn + 1 ;
 	}
 	}
